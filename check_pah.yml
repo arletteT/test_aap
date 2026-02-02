@@ -1,0 +1,24 @@
+---
+- name: Vérification utilisation Private Automation Hub
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+
+    - name: Afficher l'Execution Environment utilisé
+      debug:
+        msg: "Execution Environment: {{ ansible_execution_environment | default('non défini') }}"
+
+    - name: Vérifier qu'une collection du PAH est disponible
+      ansible.utils.cli_parse:
+        text: "test"
+        parser:
+          name: ansible.utils.textfsm
+
+    - name: Afficher les chemins de collections
+      command: ansible-galaxy collection list
+      register: galaxy_output
+
+    - name: Résultat collections
+      debug:
+        var: galaxy_output.stdout_lines
